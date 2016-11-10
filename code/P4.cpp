@@ -45,6 +45,34 @@ void initialize(int n_spins, double temp, int **spin_matrix, double& E, double& 
 	}	
 }
 
+void output(int n_spins, int mcs, double temp, double *average){
+	double norm = 1.0/ (double) (mcs);
+	double Eaverage = average[0]*norm;
+	double E2average = average[1]*norm;
+	double Maverage = average[2]*norm;
+	double M2average = average[3]*norm;
+	double Mabsaverage = average[4]*norm;
+	double Suscept = (M2average - Maverage*Maverage)/temp;
+	double Cv = (E2average - Eaverage*Eaverage)/(temp*temp);
+
+	double Evariance = (E2average - Eaverage*Eaverage)/n_spins/n_spins;
+	double Mvariance = (M2average - Mabsaverage*Mabsaverage)/n_spins/n_spins;
+
+	printf("Expectation Values:\n");
+	printf("<E> = %f\n", Eaverage);
+	printf("<M> = %f\n", Maverage);
+	printf("<E2> = %f\n", E2average);
+	printf("<M2> = %f\n", M2average);
+	printf("<|M|> = %f\n", Mabsaverage);
+	printf("Chi = %f\n", Suscept);
+	printf("Cv = %f\n", Cv);
+
+	/*FILE *fp;
+	fp = fopen("P4.txt", "w+");
+
+	fclose(fp);*/
+}
+
 int main(int argc, char* argv[]){
 
 	long idum;
@@ -52,7 +80,7 @@ int main(int argc, char* argv[]){
 	double w[17], average[5], initial_temp, final_temp, E, M, temp_step;
 
 	//--------------------------
-	mcs = 100000;
+	mcs = 1000000;
 	n_spins = 2;
 	//--------------------------
 
@@ -73,10 +101,10 @@ int main(int argc, char* argv[]){
 	for(int cycles = 1; cycles <= mcs; cycles++){
 		Metropolis(n_spins, idum, spin_matrix, E, M, w);
 		average[0] += E; average[1] += E*E;
-		average[2] += M; average[3] += M*M; average[4] = fabs(M);
+		average[2] += M; average[3] += M*M; average[4] += fabs(M);
 	}
 
-	printf("E_average = %f\n", (average[0]/mcs));
+	output(n_spins, mcs, temp, average);
 
 	free_matrix((void **) spin_matrix);
 
