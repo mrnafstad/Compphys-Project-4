@@ -28,12 +28,18 @@ void Metropolis(int n_spins, long& idum, int **spin_matrix, double& E, double& M
 	}
 }
 
-void initialize(int n_spins, double temp, int **spin_matrix, double& E, double& M){
+void initialize(int n_spins, double temp, int **spin_matrix, double& E, double& M, long & idum, bool randomdistribution){
 	for(int x = 0; x < n_spins; x++){
 		for(int y = 0; y < n_spins; y++){
-			//if (temp < 1.5) 
-			spin_matrix[x][y] = 1;
-			M += (double) spin_matrix[x][y];
+			//if (temp < 1.5)
+			if (randomdistribution) { 
+				if (ran1(&idum) <= 0.5) spin_matrix[x][y] = 1;
+				else spin_matrix[x][y] = -1;
+			}
+			else {
+				spin_matrix[x][y] = 1;
+				M += (double) spin_matrix[x][y];
+			}
 		}
 	}
 
@@ -77,6 +83,7 @@ int main(int argc, char* argv[]){
 	long idum;
 	int **spin_matrix, n_spins, mcs;
 	double w[17], average[5], initial_temp, final_temp, E, M, temp_step;
+	bool randomdistribution = true;	
 
 
 	n_spins = atoi(argv[1]);
@@ -104,7 +111,7 @@ int main(int argc, char* argv[]){
 
 		for(int i = 0; i < 5; i++) average[i] = 0.;
 
-		initialize(n_spins, temp, spin_matrix, E, M);
+		initialize(n_spins, temp, spin_matrix, E, M, idum, randomdistribution);
 		fprintf(fp, "%i %lf %lf\n", 0, E, M);
 
 		int counter = 1;
