@@ -74,6 +74,8 @@ void output(int n_spins, int mcs, double temp, double *average){
 	printf("<E2> = %f\n", E2average);
 	printf("<M2> = %f\n", M2average);
 	printf("<|M|> = %f\n", Mabsaverage);
+	printf("E_variance = %f\n", Evariance);
+	printf("M_variance = %f\n", Mvariance);
 	printf("Chi = %f\n", Suscept);
 	printf("Cv = %f\n\n", Cv);
 
@@ -168,8 +170,11 @@ int main(int argc, char* argv[]){
 
 		//...........................................
 		FILE *pr;
+		char ProbOut[25];
+		snprintf(ProbOut, sizeof(ProbOut), "Prob_%.2lf.txt", temp);
 
-		pr = fopen("Prob.txt", "w+");
+
+		pr = fopen(ProbOut, "w+");
 
 		for(int i = 0; i <= lengthArrays; i++){
 			if(Counters[i] != 0.0){
