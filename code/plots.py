@@ -3,8 +3,11 @@ from numpy import *
 
 f1 = open("T_1.00.txt")
 f2 = open("T_2.40.txt")
+f3 = open("Prob.txt")
 
 mc = []; E1 = []; M1 = []; A1 = []; E2 = []; M2 = []; A2 = []
+
+En = []; Count = []; 
 
 for line in f1:
 	words = line.split()
@@ -19,8 +22,16 @@ for line in f2:
 	M2.append(float(words[2]))
 	A2.append(float(words[3]))
 
+for line in f3:
+	words = line.split()
+	En.append(float(words[0]))
+	Count.append(float(words[1]))
+
 mc = array(mc); E1 = array(E1); M1 = array(M1); A1 = array(A1)
 E2 = array(E2); M2 = array(M2); A2 = array(A2)
+
+En, Count = zip(*sorted(zip(En, Count)))
+En = array(En); Count = array(Count);
 
 plot(mc, E1)
 hold('on')
@@ -44,4 +55,7 @@ plot(mc, A2)
 legend(["T = 1.0", "T = 2.4"])
 xlabel("Cycles")
 ylabel("# of accepted states")
+show()
+
+plot(En, Count/(10**5 - 2500))
 show()

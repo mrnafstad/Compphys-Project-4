@@ -79,6 +79,24 @@ void output(int n_spins, int mcs, double temp, double *average){
 
 }
 
+void probabilities(double E, double *Energies, int *Counters, int lengthArrays, int *no_En){
+	bool En_found = false;
+
+	for(int i = 0; i < lengthArrays; i++){
+		if(E == Energies[i]){
+			Counters[i] += 1;
+			En_found = true;
+			break;
+		}
+	}
+	if(!En_found){
+		*no_En += 1;
+		Energies[*no_En] = E;
+		Counters[*no_En] += 1;
+	}
+	
+}
+
 int main(int argc, char* argv[]){
 
 	long idum;
@@ -116,6 +134,23 @@ int main(int argc, char* argv[]){
 		initialize(n_spins, temp, spin_matrix, E, M, idum, randomdistribution);
 		fprintf(fp, "%i %lf %lf %i \n", 0, E, M, accepted);
 
+
+		//----------------------------------
+		double *Energies;
+		int *Counters, lengthArrays = 1000, no_En = 0;
+		no_En = 0;
+
+		Energies = new double [lengthArrays];
+		Counters = new int [lengthArrays];
+
+		for(int i = 0; i < lengthArrays; i++){
+			Energies[i] = 0;
+			Counters[i] = 0;
+		}
+		//------------------------------------
+
+
+
 		int counter = 1;
 
 		for(int cycles = 1; cycles <= mcs; cycles++){
@@ -123,6 +158,7 @@ int main(int argc, char* argv[]){
 			average[0] += E; average[1] += E*E;
 			average[2] += M; average[3] += M*M; average[4] += fabs(M);
 
+			if(cycles >= 2500) probabilities(E, Energies, Counters, lengthArrays, &no_En);
 
 			if(counter <= 10000){
 				fprintf(fp, "%i %lf %lf %i\n", cycles, average[0]/cycles, average[4]/cycles, accepted);
@@ -130,7 +166,23 @@ int main(int argc, char* argv[]){
 			counter += 1;
 		}
 
+		//...........................................
+		FILE *pr;
+
+		pr = fopen("Prob.txt", "w+");
+
+		for(int i = 0; i <= lengthArrays; i++){
+			if(Counters[i] != 0.0){
+				fprintf(pr, "%f %i\n", Energies[i], Counters[i]);
+			}
+		}
+
+		fclose(pr);
+		//-----------------------------------------------
+
 		output(n_spins, mcs, temp, average);
+
+		delete[] Energies; delete[] Counters;
 
 		fclose(fp);
 	}
