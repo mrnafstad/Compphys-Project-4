@@ -167,7 +167,7 @@ int main(int argc, char* argv[]){
 		for(int cycles = 1; cycles <= mcs; cycles++){
 			Metropolis(n_spins, idum, spin_matrix, E, M, w, accepted);
 			average[0] += E; average[1] += E*E;
-			average[2] += M; average[3] += M*M; average[4] += fabs(M);
+			average[2] += M; average[3] += M*M; average[4] += std::abs(M);
 
 			if(cycles >= 2500) probabilities(E, Energies, Counters, lengthArrays, &no_En);
 
