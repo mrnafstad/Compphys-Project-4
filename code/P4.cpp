@@ -67,6 +67,8 @@ void output(int n_spins, int mcs, double temp, double *average){
 	double Evariance = (E2average - Eaverage*Eaverage)/n_spins/n_spins;
 	double Mvariance = (M2average - Maverage*Maverage)/n_spins/n_spins;
 
+
+
 	printf("Spins: %i, MC-cycles: %i, Temperature: %.2lf\n", n_spins, mcs, temp);
 	printf("Expectation Values:\n");
 	printf("<E> = %f\n", Eaverage);
@@ -114,6 +116,13 @@ int main(int argc, char* argv[]){
 	temp_step = atof(argv[5]);
 
 	spin_matrix = (int**) matrix(n_spins, n_spins, sizeof(int));
+
+	//Open file to write final values
+	FILE *means;
+	char MeanOut[25];
+	snprintf(MeanOut, sizeof(MeanOut), "meanvalues_%.2lf.txt", (double) n_spins);
+	means = fopen(MeanOut, "w+");
+
 
 	for(double temp = initial_temp; temp <= final_temp; temp += temp_step){
 
@@ -187,10 +196,24 @@ int main(int argc, char* argv[]){
 
 		output(n_spins, mcs, temp, average);
 
+		double norm = 1.0/ (double) (mcs);
+		double Eaverage = average[0]*norm;
+		double E2average = average[1]*norm;
+		double Maverage = average[2]*norm;
+		double M2average = average[3]*norm;
+		double Mabsaverage = average[4]*norm;
+		double Suscept = (M2average - Maverage*Maverage)/temp/n_spins/n_spins;
+		double Cv = (E2average - Eaverage*Eaverage)/(temp*temp)/n_spins/n_spins;
+
+		//write final values
+		fprintf(means, "%f %f %f %f %f\n", temp, Eaverage, Mabsaverage, Cv, Suscept);
+
 		delete[] Energies; delete[] Counters;
 
 		fclose(fp);
 	}
+
+	fclose(means);
 
 	free_matrix((void **) spin_matrix);
 
