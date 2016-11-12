@@ -6,7 +6,7 @@ inline int periodic(int i, int limit, int add){
 	return (i+limit+add) % limit;	
 }
 
-void Metropolis(int n_spins, long& idum, int **spin_matrix, double& E, double& M, double *w){
+void Metropolis(int n_spins, long& idum, int **spin_matrix, double& E, double& M, double *w, int& accepted){
 
 	for(int x = 0; x < n_spins; x++){
 		for(int y = 0; y < n_spins; y++){
@@ -23,6 +23,7 @@ void Metropolis(int n_spins, long& idum, int **spin_matrix, double& E, double& M
 				spin_matrix[ix][iy] *= -1;
 				M += (double) 2*spin_matrix[ix][iy];
 				E += (double) deltaE;
+				accepted += 1;
 			}
 		}
 	}
@@ -81,9 +82,9 @@ void output(int n_spins, int mcs, double temp, double *average){
 int main(int argc, char* argv[]){
 
 	long idum;
-	int **spin_matrix, n_spins, mcs;
+	int **spin_matrix, n_spins, mcs, accepted;
 	double w[17], average[5], initial_temp, final_temp, E, M, temp_step;
-	bool randomdistribution = true;	
+	bool randomdistribution = false;	
 
 
 	n_spins = atoi(argv[1]);
@@ -104,6 +105,7 @@ int main(int argc, char* argv[]){
 
 		idum = -1;
 		E = M = 0;
+		accepted = 0;
 
 
 		for(int de = -8; de <= 8; de++) w[de+8] = 0;
@@ -112,17 +114,18 @@ int main(int argc, char* argv[]){
 		for(int i = 0; i < 5; i++) average[i] = 0.;
 
 		initialize(n_spins, temp, spin_matrix, E, M, idum, randomdistribution);
-		fprintf(fp, "%i %lf %lf\n", 0, E, M);
+		fprintf(fp, "%i %lf %lf %i \n", 0, E, M, accepted);
 
 		int counter = 1;
 
 		for(int cycles = 1; cycles <= mcs; cycles++){
-			Metropolis(n_spins, idum, spin_matrix, E, M, w);
+			Metropolis(n_spins, idum, spin_matrix, E, M, w, accepted);
 			average[0] += E; average[1] += E*E;
 			average[2] += M; average[3] += M*M; average[4] += fabs(M);
 
+
 			if(counter <= 10000){
-				fprintf(fp, "%i %lf %lf\n", cycles, average[0]/cycles, average[4]/cycles);
+				fprintf(fp, "%i %lf %lf %i\n", cycles, average[0]/cycles, average[4]/cycles, accepted);
 			}
 			counter += 1;
 		}
