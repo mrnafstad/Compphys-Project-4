@@ -167,7 +167,7 @@ int main(int argc, char* argv[]){
 		for(int cycles = 1; cycles <= mcs; cycles++){
 			Metropolis(n_spins, idum, spin_matrix, E, M, w, accepted);
 			average[0] += E; average[1] += E*E;
-			average[2] += M; average[3] += M*M; average[4] += std::abs(M);
+			average[2] += M; average[3] += (double) M*M; average[4] += std::abs(M);
 
 			if(cycles >= 2500) probabilities(E, Energies, Counters, lengthArrays, &no_En);
 
@@ -202,11 +202,11 @@ int main(int argc, char* argv[]){
 		double Maverage = average[2]*norm;
 		double M2average = average[3]*norm;
 		double Mabsaverage = average[4]*norm;
-		double Suscept = (M2average - Maverage*Maverage)/temp/n_spins/n_spins;
+		double Suscept = (M2average - Mabsaverage*Mabsaverage)/temp/n_spins/n_spins;
 		double Cv = (E2average - Eaverage*Eaverage)/(temp*temp)/n_spins/n_spins;
 
 		//write final values
-		fprintf(means, "%f %f %f %f %f\n", temp, Eaverage, Mabsaverage, Cv, Suscept);
+		fprintf(means, "%f %f %f %f %lf\n", temp, Eaverage, Mabsaverage, Cv, Suscept);
 
 		delete[] Energies; delete[] Counters;
 
