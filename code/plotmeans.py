@@ -1,7 +1,7 @@
 from matplotlib.pylab import *
 from numpy import *
 
-f = open("meanvalues_40.00.txt")
+f = open("meanvalues_140.00.txt")
 
 temp = []; E = []; M = []; Cv = []; Suscept = []
 

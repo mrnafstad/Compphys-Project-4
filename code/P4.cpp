@@ -176,7 +176,7 @@ int main(int argc, char* argv[]){
 			}
 			counter += 1;
 		}
-
+		
 		//...........................................
 		FILE *pr;
 		char ProbOut[25];
@@ -187,7 +187,7 @@ int main(int argc, char* argv[]){
 
 		for(int i = 0; i <= lengthArrays; i++){
 			if(Counters[i] != 0.0){
-				fprintf(pr, "%f %i\n", Energies[i], Counters[i]);
+				fprintf(pr, "%1f %li\n", Energies[i], Counters[i]);
 			}
 		}
 
