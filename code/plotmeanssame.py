@@ -31,7 +31,7 @@ for file in filenames:
 	hold("On")
 	xlabel("T")
 	ylabel(r"$<E>$")
-legend(["40x40", "60x60", "100x100", "140x140"])
+legend(["40x40", "60x60", "100x100", "140x140"], loc="upper left")
 show()
 
 color = iter(cm.rainbow(linspace(0, 1, len(filenames))))
@@ -60,7 +60,7 @@ for file in filenames:
 	hold("On")
 	xlabel("T")
 	ylabel(r"$<|M|>$")
-legend(["40x40", "60x60", "100x100", "140x140"])
+legend(["40x40", "60x60", "100x100", "140x140"], loc="upper left")
 show()
 
 
@@ -90,7 +90,7 @@ for file in filenames:
 	hold("On")
 	xlabel("T")
 	ylabel(r"$C_V$")
-legend(["40x40", "60x60", "100x100", "140x140"])
+legend(["40x40", "60x60", "100x100", "140x140"], loc="upper left")
 show()
 
 
@@ -111,6 +111,7 @@ for file in filenames:
 	else:
 		for line in f:
 			words = line.split()
+
 			chi.append(float(words[4]))
 			arr = True
 
@@ -120,5 +121,5 @@ for file in filenames:
 	hold("On")
 	xlabel("T")
 	ylabel(r"$\chi$")
-legend(["40x40", "60x60", "100x100", "140x140"])
+legend(["40x40", "60x60", "100x100", "140x140"], loc="upper left")
 show()
