@@ -187,8 +187,8 @@ int main(int argc, char* argv[]){
 		pr = fopen(ProbOut, "w+");
 
 		for(int i = 0; i <= lengthArrays; i++){
-			if(Counters[i] > 0.0){
-				fprintf(pr, "%1f %li\n", Energies[i], Counters[i]);
+			if((Counters[i] != 0.0) && (Counters[i] > 0) && (Energies[i] != 0.0)){
+				fprintf(pr, "%1f %lf\n", Energies[i]/n_spins/n_spins, (double)Counters[i]/(double)(mcs - 2500));
 			}
 		}
 
