@@ -1,7 +1,7 @@
 from matplotlib.pylab import *
 from numpy import *
 
-filenames = ["T_1.00.txt", "T_2.40.txt"]
+filenames = ["T_1.00.txt", "T_2.40.txt", "T_random_1.00.txt", "T_random_2.40.txt"]
 
 arr = False
 color = iter(cm.rainbow(linspace(0, 1, len(filenames))))
@@ -31,7 +31,7 @@ for file in filenames:
 	hold("On")
 	xlabel("Monte Carlo cycles")
 	ylabel(r"$<E>$ $[spin^{-1}]$")
-legend(["T=1.00", "T=2.40"], loc="upper left")
+legend(["T=1.00", "T=2.40", "T=1.00 random", "T=2.40 random"], loc="upper right")
 show()
 
 color = iter(cm.rainbow(linspace(0, 1, len(filenames))))
@@ -60,7 +60,7 @@ for file in filenames:
 	hold("On")
 	xlabel("Monte Carlo cycles")
 	ylabel(r"$<|M|>$ $[spin^{-1}]$")
-legend(["T = 1.00", "T = 2.40"], loc="upper left")
+legend(["T=1.00", "T=2.40", "T=1.00 random", "T=2.40 random"], loc="lower right")
 show()
 
 
@@ -89,6 +89,6 @@ for file in filenames:
 	plot(temp, A, c = next(color))
 	hold("On")
 	xlabel("Monte Carlo cycles")
-	ylabel(r"Accepted configurations")
-legend(["T = 1.00", "T = 2.40"], loc="upper left")
+	ylabel("Accepted configurations")
+legend(["T=1.00", "T=2.40", "T=1.00 random", "T=2.40 random"], loc="upper left")
 show()

@@ -127,7 +127,8 @@ int main(int argc, char* argv[]){
 	for(double temp = initial_temp; temp <= final_temp; temp += temp_step){
 
 		char outfile[20];
-		snprintf(outfile, sizeof(outfile), "T_%.2lf.txt", temp);
+		if (randomdistribution) snprintf(outfile, sizeof(outfile), "T_random_%.2lf.txt", temp);
+		else snprintf(outfile, sizeof(outfile), "T_%.2lf.txt", temp);
 
 		FILE *fp;
 		fp = fopen(outfile, "w+");
@@ -143,7 +144,7 @@ int main(int argc, char* argv[]){
 		for(int i = 0; i < 5; i++) average[i] = 0.;
 
 		initialize(n_spins, temp, spin_matrix, E, M, idum, randomdistribution);
-		fprintf(fp, "%i %lf %lf %i \n", 0, E/n_spins, M/n_spins, accepted);
+		fprintf(fp, "%i %lf %lf %i \n", 0, E/n_spins/n_spins, M/n_spins/n_spins, accepted);
 
 
 		//----------------------------------
