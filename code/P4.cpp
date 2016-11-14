@@ -143,7 +143,7 @@ int main(int argc, char* argv[]){
 		for(int i = 0; i < 5; i++) average[i] = 0.;
 
 		initialize(n_spins, temp, spin_matrix, E, M, idum, randomdistribution);
-		fprintf(fp, "%i %lf %lf %i \n", 0, E, M, accepted);
+		fprintf(fp, "%i %lf %lf %i \n", 0, E/n_spins, M/n_spins, accepted);
 
 
 		//----------------------------------
@@ -172,7 +172,7 @@ int main(int argc, char* argv[]){
 			if(cycles >= 2500) probabilities(E, Energies, Counters, lengthArrays, &no_En);
 
 			if(counter <= 10000){
-				fprintf(fp, "%i %lf %lf %i\n", cycles, average[0]/cycles, average[4]/cycles, accepted);
+				fprintf(fp, "%i %lf %lf %i\n", cycles, average[0]/cycles/n_spins, average[4]/cycles/n_spins, accepted);
 			}
 			counter += 1;
 		}
@@ -186,7 +186,7 @@ int main(int argc, char* argv[]){
 		pr = fopen(ProbOut, "w+");
 
 		for(int i = 0; i <= lengthArrays; i++){
-			if(Counters[i] != 0.0){
+			if(Counters[i] > 0.0){
 				fprintf(pr, "%1f %li\n", Energies[i], Counters[i]);
 			}
 		}
@@ -206,7 +206,7 @@ int main(int argc, char* argv[]){
 		double Cv = (E2average - Eaverage*Eaverage)/(temp*temp)/n_spins/n_spins;
 
 		//write final values
-		fprintf(means, "%f %f %f %f %lf\n", temp, Eaverage, Mabsaverage, Cv, Suscept);
+		fprintf(means, "%f %f %f %f %lf\n", temp, Eaverage/n_spins, Mabsaverage/n_spins, Cv, Suscept);
 
 		delete[] Energies; delete[] Counters;
 

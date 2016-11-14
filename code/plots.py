@@ -3,7 +3,7 @@ from numpy import *
 
 f1 = open("T_1.00.txt")
 f2 = open("T_2.40.txt")
-f3 = open("Prob_1.00.txt")
+f3 = open("Prob_2.40.txt")
 
 mc = []; E1 = []; M1 = []; A1 = []; E2 = []; M2 = []; A2 = []
 
