@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <math.h>
+#include <time.h>
 #include "lib.h"
 
 inline int periodic(int i, int limit, int add){
@@ -105,8 +106,9 @@ int main(int argc, char* argv[]){
 
 	long idum;
 	int **spin_matrix, n_spins, mcs, accepted;
-	double w[17], average[5], initial_temp, final_temp, E, M, temp_step;
-	bool randomdistribution = false;	
+	double w[17], average[5], initial_temp, final_temp, E, M, temp_step, Cv_max=0.0, Tc, total_time;
+	bool randomdistribution = false;
+	clock_t start1, start2, finish1, finish2;
 
 
 	n_spins = atoi(argv[1]);
@@ -137,7 +139,7 @@ int main(int argc, char* argv[]){
 		E = M = 0;
 		accepted = 0;
 
-
+		start1 = clock();
 		for(int de = -8; de <= 8; de++) w[de+8] = 0;
 		for(int de = -8; de <= 8; de += 4) w[de+8] = exp(-de/temp);
 
@@ -166,7 +168,9 @@ int main(int argc, char* argv[]){
 		int counter = 1;
 
 		for(int cycles = 1; cycles <= mcs; cycles++){
+			start2 = clock();
 			Metropolis(n_spins, idum, spin_matrix, E, M, w, accepted);
+			finish2 = clock();
 			average[0] += E; average[1] += E*E;
 			average[2] += M; average[3] += (double) M*M; average[4] += std::abs(M);
 
@@ -178,6 +182,11 @@ int main(int argc, char* argv[]){
 			counter += 1;
 		}
 		
+		total_time = ( ( double ) ( finish2 - start2 ) / (double)CLOCKS_PER_SEC );
+		printf("Time for one Monte Carlo cycle is %2.2e seconds \n", total_time);
+
+
+
 		//...........................................
 		FILE *pr;
 		char ProbOut[25];
@@ -196,6 +205,9 @@ int main(int argc, char* argv[]){
 		//-----------------------------------------------
 
 		output(n_spins, mcs, temp, average);
+		finish1 = clock();
+		total_time = ( ( double ) ( finish1 - start1 ) / (double)CLOCKS_PER_SEC );
+		printf("Time spent on this temperature is %2.2e seconds \n", total_time);
 
 		double norm = 1.0/ (double) (mcs);
 		double Eaverage = average[0]*norm;
@@ -205,6 +217,10 @@ int main(int argc, char* argv[]){
 		double Mabsaverage = average[4]*norm;
 		double Suscept = (M2average - Mabsaverage*Mabsaverage)/temp/n_spins/n_spins;
 		double Cv = (E2average - Eaverage*Eaverage)/(temp*temp)/n_spins/n_spins;
+		if(Cv > Cv_max) {
+			Cv_max = Cv;
+			Tc = temp;
+		}
 
 		//write final values
 		fprintf(means, "%f %f %f %f %lf\n", temp, Eaverage/n_spins, Mabsaverage/n_spins, Cv, Suscept);
@@ -215,6 +231,7 @@ int main(int argc, char* argv[]){
 	}
 
 	fclose(means);
+	printf("Tc = %lf for %ix%i spins\n", Tc, n_spins, n_spins);
 
 	free_matrix((void **) spin_matrix);
 
