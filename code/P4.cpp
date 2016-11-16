@@ -62,8 +62,8 @@ void output(int n_spins, int mcs, double temp, double *average){
 	double Maverage = average[2]*norm;
 	double M2average = average[3]*norm;
 	double Mabsaverage = average[4]*norm;
-	double Suscept = (M2average - Maverage*Maverage)/temp/n_spins/n_spins;
-	double Cv = (E2average - Eaverage*Eaverage)/(temp*temp)/n_spins/n_spins;
+	double Suscept = (M2average - Maverage*Maverage)/temp;
+	double Cv = (E2average - Eaverage*Eaverage)/(temp*temp);
 
 	double Evariance = (E2average - Eaverage*Eaverage)/n_spins/n_spins;
 	double Mvariance = (M2average - Maverage*Maverage)/n_spins/n_spins;

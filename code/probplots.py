@@ -1,7 +1,7 @@
 from matplotlib.pylab import *
 from numpy import *
 
-filenames = ["Prob_2.40.txt"]#, "Prob_1.00.txt"]
+filenames = [ "Prob_1.00.txt"]
 
 arr = False
 color = iter(cm.rainbow(linspace(0, 1, len(filenames))))
@@ -31,5 +31,5 @@ for file in filenames:
 	hold("On")
 	xlabel("E")
 	ylabel("P (E) ")
-legend(["T=2.40"], loc="upper right")
+legend(["T=1.00"], loc="upper right")
 show()
